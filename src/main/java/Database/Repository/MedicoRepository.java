@@ -7,15 +7,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
-public class MedicoRepository {
-    private IDbConnection DbConnection;
-    private MongoDatabase Db;
-    private MongoCollection<Document> Collection;
+public class MedicoRepository extends BaseRepository {
 
     public MedicoRepository() {
-        this.DbConnection = new DbConnection();
-        this.Db = this.DbConnection.GetDatabase();
-        this.Collection = this.Db.getCollection("medico");
+        super("medico");
     }
 
     public void Insert(MedicoEntity entity) {

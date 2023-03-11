@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Main{
     public static void main(String[] args){
-        MedicoEntity entity = new MedicoEntity(12, "Doutor Marcelo", "marcelo@gmail.com", "marcelo31");
+        MedicoEntity entity = new MedicoEntity(12, "Doutor Yuri", "yuri@gmail.com", "yurinhobembonitinho");
 
         MedicoRepository repository = new MedicoRepository();
         repository.Insert(entity);
