@@ -10,8 +10,11 @@ import com.mongodb.client.MongoDatabase;
 
 import javax.swing.text.Document;
 
-public class DbConnection {
-    public static MongoDatabase getDatabase() {
+public class DbConnection implements IDbConnection {
+    public DbConnection() {
+
+    }
+    public MongoDatabase GetDatabase() {
             ConnectionString connectionString = new ConnectionString("mongodb+srv://yuricardoso:projetopoo@testejs.n6fcx.mongodb.net/?retryWrites=true&w=majority");
             MongoClientSettings settings = MongoClientSettings.builder()
                     .applyConnectionString(connectionString)

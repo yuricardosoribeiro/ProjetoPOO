@@ -1,4 +1,5 @@
 import Database.Connection.DbConnection;
+import Database.Repository.MedicoRepository;
 import Domain.Entities.MedicoEntity;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -10,13 +11,11 @@ import java.util.List;
 
 public class Main{
     public static void main(String[] args){
-        MongoDatabase db = DbConnection.getDatabase();
+        MedicoEntity entity = new MedicoEntity(12, "Doutor Marcelo", "marcelo@gmail.com", "marcelo31");
 
-        MongoCollection<Document> collection = db.getCollection("medico");
-        MedicoEntity entity = new MedicoEntity(12, "Doutor Roberto", "roberto@gmail.com", "roberto123");
+        MedicoRepository repository = new MedicoRepository();
+        repository.Insert(entity);
 
-        collection.insertOne(entity.toDocument());
-
-        System.out.println(db.getName());
+        System.out.println();
     }
 }
