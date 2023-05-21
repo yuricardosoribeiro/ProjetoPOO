@@ -52,7 +52,7 @@ public class MedicoEntity extends BaseEntity<MedicoEntity> {
     }
 
     @Override
-    public Document toDocument() {
+    public Document ToDocument() {
         Document doc = new Document("Nome", this.getNome());
         doc.append("Email", this.getEmail());
         doc.append("Senha", this.getSenha());
@@ -60,7 +60,7 @@ public class MedicoEntity extends BaseEntity<MedicoEntity> {
         return doc;
     }
 
-    public static MedicoEntity toClass(Document document) {
+    public static MedicoEntity ToClass(Document document) {
         MedicoEntity entity = new MedicoEntity();
 
         entity.setId((ObjectId) document.get("_id"));

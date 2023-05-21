@@ -3,8 +3,15 @@ package Domain.Entities;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-public abstract class BaseEntity<T> {
-    protected ObjectId Id;
+import java.util.List;
 
-    abstract Document toDocument();
+public abstract class BaseEntity<TEntity> {
+    protected ObjectId Id;
+    public List<String> ValidationErrors;
+
+    public boolean IsValid() {
+        return ValidationErrors.size() == 0;
+    }
+
+    public abstract Document ToDocument();
 }

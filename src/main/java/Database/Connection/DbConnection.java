@@ -29,7 +29,11 @@ public class DbConnection implements IDbConnection {
                             .build())
                     .build();
             MongoClient mongoClient = MongoClients.create(settings);
-            MongoDatabase database = mongoClient.getDatabase("ProjetoPOO");
+            CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
+                MongoClientSettings.getDefaultCodecRegistry(),
+                CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build())
+            );
+            MongoDatabase database = mongoClient.getDatabase("ProjetoPOO").withCodecRegistry(codecRegistry);
 
             return database;
         }

@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MedicoRepository extends BaseRepository {
+public class MedicoRepository extends BaseRepository<MedicoEntity> {
 
     public MedicoRepository() {
         super("medico");
     }
 
     public void Insert(MedicoEntity entity) {
-        this.Collection.insertOne(entity.toDocument());
+        this.Collection.insertOne(entity.ToDocument());
     }
 
     public List<MedicoEntity> GetAll() {
@@ -28,7 +28,7 @@ public class MedicoRepository extends BaseRepository {
 
         while(iterator.hasNext()) {
             Document doc = (Document) iterator.next();
-            entityLst.add(MedicoEntity.toClass(doc));
+            entityLst.add(new MedicoEntity().ToClass(doc));
         }
 
         return entityLst;
@@ -40,7 +40,7 @@ public class MedicoRepository extends BaseRepository {
 
         Document doc = this.Collection.find(searchQuery).first();
 
-        return MedicoEntity.toClass(doc);
+        return new MedicoEntity().ToClass(doc);
     }
 
     public void Update(MedicoEntity entity) {
@@ -48,7 +48,7 @@ public class MedicoRepository extends BaseRepository {
         query.put("_id", entity.getId());
 
         BasicDBObject updated = new BasicDBObject();
-        updated.put("$set", entity.toDocument());
+        updated.put("$set", entity.ToDocument());
 
         this.Collection.updateOne(query, updated);
     }

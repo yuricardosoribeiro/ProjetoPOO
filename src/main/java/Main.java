@@ -1,24 +1,87 @@
-import Database.Repository.MedicoRepository;
+import Database.Repository.PacienteRepository;
 import Domain.Entities.MedicoEntity;
-import org.bson.types.ObjectId;
+import Domain.Entities.PacienteEntity;
+import Domain.Utils.Console;
+import Domain.Utils.Validators;
+import Services.MedicoService;
+import Services.PacienteService;
 
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args){
-        MedicoEntity entity = new MedicoEntity(ObjectId.get(), "Doutor Yuri", "yuri@gmail.com", "yurinhobembonitinho");
+    static Scanner scanner = new Scanner(System.in);
 
-        MedicoRepository repository = new MedicoRepository();
-//        repository.Insert(entity);
+    public static void main(String[] args) throws InterruptedException {
 
-//        List<MedicoEntity> lst = repository.GetAll();
-//        MedicoEntity entity1 = repository.GetById(new ObjectId("640bdefd7e61f45bdad2e8fd"));
-//        entity1.setNome("Doutor Chinês");
-//
-//        repository.Update(entity1);
-//
-//        System.out.println(entity1.getNome() + entity1.getEmail() + entity1.getSenha());
+        int choice = -1;
+        boolean condition = true;
 
-        repository.Delete(new ObjectId("640bdefd7e61f45bdad2e8fd"));
+        while(condition) {
+            Console.EmitTitle("GESTÃO DE CLÍNICA MÉDICA");
+            System.out.println("1 - Cadastros e relatórios");
+            System.out.println("2 - Área do Médico");
+            System.out.println("3 - Área de Consultas");
+            System.out.print("Sua escolha: ");
+
+            try {
+                choice = scanner.nextInt();
+
+                switch (choice) {
+                    case 1: {
+                        CadastrosRelatorios();
+                        break;
+                    }
+                }
+            }
+            catch(InputMismatchException exception) {
+                Console.EmitError("Por favor, digite uma opção válida!");
+                choice = -1;
+                scanner.nextLine();
+            }
+        }
+    }
+
+    public static void CadastrosRelatorios() {
+        int choice = -1;
+        boolean condition = true;
+        MedicoService medicoService = new MedicoService();
+        PacienteService pacienteService = new PacienteService();
+
+        while(condition) {
+            Console.EmitTitle("CADASTROS E RELATÓRIOS");
+            System.out.println("1 - Cadastrar paciente");
+            System.out.println("2 - Mostrar pacientes cadastrados");
+            System.out.println("3 - Deletar paciente");
+            System.out.println("0 - Voltar a tela inicial");
+            System.out.print("Sua escolha: ");
+
+            try {
+                choice = scanner.nextInt();
+
+                switch (choice) {
+                    case 0:
+                        condition = false;
+                        break;
+                    case 1:
+                        pacienteService.CadastrarPaciente();
+                        break;
+                    case 2:
+                        pacienteService.MostrarPacientes();
+                        break;
+                    case 3:
+                        pacienteService.DeletarPaciente();
+                        break;
+                }
+            }
+            catch(InputMismatchException exception) {
+                Console.EmitError("Por favor, digite uma opção válida!");
+                scanner.nextLine();
+            }
+            finally {
+                choice = -1;
+            }
+        }
     }
 }
