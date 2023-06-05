@@ -1,8 +1,7 @@
 package Database.Repository;
 
+import Domain.Entities.ConvenioEntity;
 import Domain.Entities.MedicoEntity;
-import Domain.Entities.PacienteEntity;
-import Services.PacienteService;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import org.bson.Document;
@@ -12,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class PacienteRepository extends BaseRepository<PacienteEntity> {
-    public PacienteRepository() {
-        super("paciente", new PacienteEntity());
+public class ConvenioRepository extends BaseRepository<ConvenioEntity> {
+    public ConvenioRepository() {
+        super("convenio", new ConvenioEntity());
     }
 }
+
+

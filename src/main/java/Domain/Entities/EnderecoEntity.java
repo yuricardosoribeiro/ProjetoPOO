@@ -107,16 +107,12 @@ public class EnderecoEntity extends BaseEntity {
         return doc;
     }
 
-    public static EnderecoEntity ToClass(Document document) {
-        EnderecoEntity entity = new EnderecoEntity();
-
-        entity.Logradouro = ((String) document.get("Logradouro"));
-        entity.CEP = ((String) document.get("CEP"));
-        entity.Numero = ((int) document.get("Numero"));
-        entity.Bairro = ((String) document.get("Bairro"));
-        entity.Cidade = ((String) document.get("Cidade"));
-        entity.Complemento = ((String) document.get("Complemento"));
-
-        return entity;
+    public void ToClass(Document document) {
+        this.Logradouro = ((String) document.get("Logradouro"));
+        this.CEP = ((String) document.get("CEP"));
+        this.Numero = ((int) document.get("Numero"));
+        this.Bairro = ((String) document.get("Bairro"));
+        this.Cidade = ((String) document.get("Cidade"));
+        this.Complemento = ((String) document.get("Complemento"));
     }
 }

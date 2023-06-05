@@ -1,73 +1,66 @@
 package Domain.Entities;
 
+import Domain.Exceptions.ValidationException;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.util.List;
+
 public class MedicoEntity extends BaseEntity<MedicoEntity> {
     private String Nome;
-    private String Email;
-    private String Senha;
+    private String CRM;
+    private String Especialidade;
+    private List<String> Convenios;
 
     public MedicoEntity() {
 
-    }
-
-    public MedicoEntity(ObjectId id, String nome, String email, String senha) {
-        Id = id;
-        Nome = nome;
-        Email = email;
-        Senha = senha;
-    }
-
-    public ObjectId getId() {
-        return Id;
-    }
-
-    public void setId(ObjectId id) {
-        Id = id;
     }
 
     public String getNome() {
         return Nome;
     }
 
-    public void setNome(String nome) {
-        Nome = nome;
+    public void setNome(String nome) throws ValidationException {
+        String[] nomeArray = nome.split(" ");
+
+        if(nomeArray.length > 1)
+            this.Nome = nome;
+        else {
+            this.Nome = null;
+            throw new ValidationException("Digite o nome completo do médico!");
+        }
     }
 
-    public String getEmail() {
-        return Email;
+    public String getCRM() { return this.CRM; }
+
+    public void setCRM(String CRM) throws ValidationException {
+        if(CRM == "")
+            throw new ValidationException("O CRM é obrigatório!");
+        else
+            this.CRM = CRM;
     }
 
-    public void setEmail(String email) {
-        Email = email;
+    public String getEspecialidade() {
+        return this.Especialidade;
     }
 
-    public String getSenha() {
-        return Senha;
-    }
-
-    public void setSenha(String senha) {
-        Senha = senha;
+    public void setEspecialidade(String Especialidade) {
+        this.Especialidade = Especialidade;
     }
 
     @Override
     public Document ToDocument() {
         Document doc = new Document("Nome", this.getNome());
-        doc.append("Email", this.getEmail());
-        doc.append("Senha", this.getSenha());
+        doc.append("CRM", this.getCRM());
+        doc.append("Especialidade", this.getEspecialidade());
 
         return doc;
     }
 
-    public static MedicoEntity ToClass(Document document) {
-        MedicoEntity entity = new MedicoEntity();
-
-        entity.setId((ObjectId) document.get("_id"));
-        entity.setEmail((String) document.get("Email"));
-        entity.setNome((String) document.get("Nome"));
-        entity.setSenha((String) document.get("Senha"));
-
-        return entity;
+    public void ToClass(Document document) {
+        this.Id = (ObjectId) document.get("_id");
+        this.Nome = (String) document.get("Nome");
+        this.CRM = (String) document.get("CRM");
+        this.Especialidade = (String) document.get("Especialidade");
     }
 }

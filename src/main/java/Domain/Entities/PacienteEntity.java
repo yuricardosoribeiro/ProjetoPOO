@@ -2,6 +2,7 @@ package Domain.Entities;
 
 import Domain.Exceptions.ValidationException;
 import Domain.Utils.Validators;
+import Services.ConvenioService;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -16,17 +17,10 @@ public class PacienteEntity extends BaseEntity{
     private String Telefone;
     private Date DataNascimento;
     private EnderecoEntity Endereco;
+    private ConvenioEntity Convenio;
 
     public PacienteEntity() {
 
-    }
-
-    public ObjectId getId() {
-        return Id;
-    }
-
-    public void setId(ObjectId id) {
-        Id = id;
     }
 
     public String getNome() {
@@ -98,6 +92,10 @@ public class PacienteEntity extends BaseEntity{
         Endereco = endereco;
     }
 
+    public void setConvenio(ConvenioEntity convenio) { this.Convenio = convenio; }
+
+    public ConvenioEntity getConvenio() { return this.Convenio; }
+
     @Override
     public Document ToDocument() {
         Document doc = new Document("Nome", this.getNome());
@@ -107,26 +105,26 @@ public class PacienteEntity extends BaseEntity{
         doc.append("Telefone", this.getTelefone());
         doc.append("Endereco", this.getEndereco().ToDocument());
 
+        if(Convenio != null)
+            doc.append("Convenio", this.getConvenio().ToDocument());
+
         return doc;
     }
 
-    public static PacienteEntity ToClass(Document document) {
+    public void ToClass(Document document) {
         PacienteEntity entity = new PacienteEntity();
 
-        try {
-            entity.Id = ((ObjectId) document.get("_id"));
-            entity.Nome = ((String) document.get("Nome"));
-            entity.Cpf = ((String) document.get("Cpf"));
-            entity.DataNascimento = (Date) document.get("DataNascimento");
-            entity.Endereco = (EnderecoEntity.ToClass((Document)document.get("Endereco")));
-            entity.Telefone = (String) document.get("Telefone");
+        this.Id = ((ObjectId) document.get("_id"));
+        this.Nome = ((String) document.get("Nome"));
+        this.Cpf = ((String) document.get("Cpf"));
+        this.DataNascimento = (Date) document.get("DataNascimento");
+        this.Endereco = new EnderecoEntity();
+        this.Endereco.ToClass((Document)document.get("Endereco"));
+        this.Telefone = (String) document.get("Telefone");
+        this.Convenio = new ConvenioEntity();
 
-            return entity;
-        } catch(Exception ex) {
-            System.out.println("Algum erro ocorreu! " + ex.getMessage());
-        }
-        finally {
-            return entity;
-        }
+        Document convenioDocument = (Document)document.get("Convenio");
+        if(convenioDocument != null)
+            this.Convenio.ToClass(convenioDocument);
     }
 }
