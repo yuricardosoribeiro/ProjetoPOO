@@ -4,10 +4,7 @@ import Domain.Entities.MedicoEntity;
 import Domain.Entities.PacienteEntity;
 import Domain.Utils.Console;
 import Domain.Utils.Validators;
-import Services.AreaMedicoService;
-import Services.ConvenioService;
-import Services.MedicoService;
-import Services.PacienteService;
+import Services.*;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -27,6 +24,7 @@ public class Main {
             System.out.println("2 - Gerenciamento de Médicos");
             System.out.println("3 - Gerenciamento de Convênios");
             System.out.println("4 - Área do Médico");
+            System.out.println("5 - Área do Paciente");
             System.out.print("Sua escolha: ");
 
             try {
@@ -44,6 +42,9 @@ public class Main {
                         break;
                     case 4:
                         AreaMedico();
+                        break;
+                    case 5:
+                        AreaPaciente();
                         break;
                 }
             }
@@ -210,7 +211,8 @@ public class Main {
         while(condition) {
             Console.EmitTitle("OLÁ, " + medico.getNome().toUpperCase());
             System.out.println("1 - Ver a agenda de hoje");
-            System.out.println("0 - Voltar a tela inicial");
+            System.out.println("2 - Ver a agenda da semana");
+            System.out.println("0 - Voltar a tela anterior");
             System.out.print("Sua escolha: ");
 
             try {
@@ -222,6 +224,73 @@ public class Main {
                         break;
                     case 1:
                         areaMedicoService.MostrarAgendaDoDia();
+                        break;
+                    case 2:
+                        areaMedicoService.MostrarAgendaDaSemana();
+                        break;
+                }
+            }
+            catch(InputMismatchException exception) {
+                Console.EmitError("Por favor, digite uma opção válida!");
+                scanner.nextLine();
+            }
+            finally {
+                choice = -1;
+            }
+        }
+    }
+
+    public static void AreaPaciente() {
+        Console.EmitTitle("ÁREA DE PACIENTES");
+
+        PacienteRepository pacienteRepository = new PacienteRepository();
+        List<PacienteEntity> pacientes = pacienteRepository.GetAll();
+
+        for(int i = 0; i < pacientes.size(); i++) {
+            System.out.println(i + " - " + pacientes.get(i).getNome());
+        }
+
+        int choice = -1;
+        boolean condition = true;
+        PacienteEntity paciente = new PacienteEntity();
+
+        while(condition) {
+            try {
+                System.out.print("Qual paciente você é? ");
+                int id = scanner.nextInt();
+
+                if(id > pacientes.size() || id < 0)
+                    Console.EmitError("Esse paciente não existe!");
+                else {
+                    paciente = pacientes.get(id);
+                    condition = false;
+                }
+            }
+            catch(InputMismatchException exception) {
+                Console.EmitError("Por favor, digite uma opção válida!");
+                scanner.nextLine();
+            }
+        }
+
+        AreaPacienteService areaPacienteService = new AreaPacienteService(paciente);
+        choice = -1;
+        condition = true;
+
+        while(condition) {
+            Console.EmitTitle("OLÁ, " + paciente.getNome().toUpperCase());
+            System.out.println("1 - Agendar consulta");
+            System.out.println("0 - Voltar a tela anterior");
+            System.out.print("Sua escolha: ");
+
+            try {
+                choice = scanner.nextInt();
+
+                switch (choice) {
+                    case 0:
+                        condition = false;
+                        break;
+                    case 1:
+                        areaPacienteService.AgendarConsulta();
                         break;
                 }
             }

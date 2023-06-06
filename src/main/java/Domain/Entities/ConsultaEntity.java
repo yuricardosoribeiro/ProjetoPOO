@@ -9,8 +9,9 @@ import java.util.Date;
 public class ConsultaEntity extends BaseEntity<ConsultaEntity> {
 
     private Date Data;
-    private ObjectId MedicoId;
-    private ObjectId PacienteId;
+    private MedicoEntity Medico;
+    private PacienteEntity Paciente;
+    private boolean ConsultaAconteceu;
 
     public Date getData() {
         return Data;
@@ -20,33 +21,54 @@ public class ConsultaEntity extends BaseEntity<ConsultaEntity> {
         Data = data;
     }
 
-    public ObjectId getMedicoId() {
-        return MedicoId;
+    public MedicoEntity getMedico() {
+        this.ConsultaAconteceu = false;
+        return Medico;
     }
 
-    public void setMedicoId(ObjectId medicoId) {
-        MedicoId = medicoId;
+    public void setMedico(MedicoEntity medico) {
+        Medico = medico;
     }
 
-    public ObjectId getPacienteId() {
-        return PacienteId;
+    public PacienteEntity getPaciente() {
+        return Paciente;
     }
 
-    public void setPacienteId(ObjectId pacienteId) {
-        PacienteId = pacienteId;
+    public void setPaciente(PacienteEntity paciente) {
+        Paciente = paciente;
+    }
+
+    public boolean isConsultaAconteceu() {
+        return ConsultaAconteceu;
+    }
+
+    public void setConsultaAconteceu(boolean consultaAconteceu) {
+        ConsultaAconteceu = consultaAconteceu;
     }
 
     @Override
     public Document ToDocument() {
         Document doc = new Document("Data", this.getData());
-        doc.append("MedicoId", this.getMedicoId());
-        doc.append("PacienteId", this.getPacienteId());
+        doc.append("Medico", this.getMedico().ToDocument());
+        doc.append("Paciente", this.getPaciente().ToDocument());
+        doc.append("ConsultaAconteceu", this.isConsultaAconteceu());
+
+        if(this.Id != null)
+            doc.append("_id", this.getId());
 
         return doc;
     }
 
     @Override
     public void ToClass(Document document) {
+        this.Id = (ObjectId) document.get("_id");
+        this.Data = (Date) document.get("Data");
+        this.ConsultaAconteceu = (boolean) document.get("ConsultaAconteceu");
 
+        this.Medico = new MedicoEntity();
+        Medico.ToClass((Document) document.get("Medico"));
+
+        this.Paciente = new PacienteEntity();
+        Paciente.ToClass((Document) document.get("Paciente"));
     }
 }

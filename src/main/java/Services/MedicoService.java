@@ -12,10 +12,12 @@ import java.util.Scanner;
 
 public class MedicoService {
     private MedicoRepository medicoRepository;
+    private UtilsService utilsService;
     private Scanner scanner = new Scanner(System.in);
 
     public MedicoService() {
         this.medicoRepository = new MedicoRepository();
+        this.utilsService = new UtilsService();
     }
 
     public void CadastrarMedico() {
@@ -38,7 +40,7 @@ public class MedicoService {
                 }
 
                 if(medico.getEspecialidade() == null) {
-                    medico.setEspecialidade(SelecionarEspecialidade());
+                    medico.setEspecialidade(utilsService.SelecionarEspecialidade());
                 }
 
                 isNotValid = false;
@@ -57,39 +59,6 @@ public class MedicoService {
         } catch(Exception exception) {
             Console.EmitError(exception.getMessage());
         }
-    }
-
-    private String SelecionarEspecialidade() {
-        List<String> lstEspecialidades = new EspecialidadeConstant().ObterTodasEspecialidades();
-
-        for(int i = 0; i < lstEspecialidades.size(); i++) {
-            System.out.println((i+1) + " - " + lstEspecialidades.get(i));
-        }
-
-        boolean condition = true;
-        String especialidadeEscolhida = "";
-
-        while(condition) {
-            try {
-                System.out.print("Especialidade: ");
-                int choice = scanner.nextInt();
-
-                if(choice > lstEspecialidades.size() + 1)
-                    Console.EmitError("Essa especialidade não existe!");
-                else {
-                    especialidadeEscolhida = lstEspecialidades.get(choice - 1);
-                    condition = false;
-                }
-            }
-            catch (InputMismatchException exception) {
-                Console.EmitError("Valor inválido!");
-            }
-            finally {
-                scanner.nextLine();
-            }
-        }
-
-        return especialidadeEscolhida;
     }
 
     public void MostrarMedicos() {

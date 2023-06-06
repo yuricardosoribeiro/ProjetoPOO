@@ -54,6 +54,9 @@ public class MedicoEntity extends BaseEntity<MedicoEntity> {
         doc.append("CRM", this.getCRM());
         doc.append("Especialidade", this.getEspecialidade());
 
+        if(this.Id != null)
+            doc.append("_id", this.getId());
+
         return doc;
     }
 

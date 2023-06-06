@@ -107,6 +107,8 @@ public class PacienteEntity extends BaseEntity{
 
         if(Convenio != null)
             doc.append("Convenio", this.getConvenio().ToDocument());
+        if(this.Id != null)
+            doc.append("_id", this.getId());
 
         return doc;
     }
