@@ -172,6 +172,7 @@ public class PacienteService {
             try {
                 System.out.print("Número do paciente que você deseja deletar: ");
                 int index = scanner.nextInt();
+                scanner.nextLine();
 
                 if(index > pacientes.size())
                     Console.EmitError("O paciente com esse número não existe!");
@@ -181,6 +182,7 @@ public class PacienteService {
             }
             catch(InputMismatchException exception) {
                 Console.EmitError("Valor inválido!");
+                scanner.nextLine();
             }
         }
 
@@ -213,7 +215,12 @@ public class PacienteService {
         System.out.println("Bairro: " + paciente.getEndereco().getBairro());
         System.out.println("Cidade: " + paciente.getEndereco().getCidade());
         System.out.println("Número: " + paciente.getEndereco().getNumero());
-        System.out.println("Complemento: " + paciente.getEndereco().getComplemento() + "\n");
+        System.out.println("Complemento: " + paciente.getEndereco().getComplemento());
+
+        if(paciente.getConvenio() != null)
+            System.out.println("Convênio: " + paciente.getConvenio().getNome());
+
+        System.out.println();
 
         boolean isNotValid = true;
 
@@ -277,6 +284,14 @@ public class PacienteService {
                 System.out.print("Complemento: ");
                 String complemento = scanner.nextLine();
                 newPaciente.getEndereco().setComplemento(complemento);
+
+                System.out.print("Deseja mudar o convênio do paciente? (S/N) = ");
+                String escolha = scanner.nextLine();
+
+                if(!escolha.equals("S") && !escolha.equals("N"))
+                    throw new ValidationException("Por favor escolha uma das opções fornecidas!");
+                else
+                    paciente.setConvenio(escolha.equals("S") ? this.convenioService.VincularConvenio() : paciente.getConvenio());
 
                 isNotValid = false;
             }
@@ -369,6 +384,7 @@ public class PacienteService {
             try {
                 System.out.print("Número do paciente: ");
                 index = scanner.nextInt() - 1;
+                scanner.nextLine();
 
                 if(index > pacientes.size())
                     Console.EmitError("O paciente com esse número não existe!");

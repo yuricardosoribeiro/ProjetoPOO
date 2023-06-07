@@ -4,6 +4,7 @@ import Database.Repository.MedicoRepository;
 import Domain.Entities.MedicoEntity;
 import Domain.Exceptions.ValidationException;
 import Domain.Utils.Console;
+import org.bson.types.ObjectId;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -83,5 +84,48 @@ public class MedicoService {
                 System.out.println("CRM: " + medico.getCRM());
                 System.out.println("Especialidade: " + medico.getEspecialidade() + "\n");
             });
+    }
+
+    public void DeletarMedico() {
+        Console.EmitTitle("EXCLUIR MÉDICO");
+
+        List<MedicoEntity> medicos = this.medicoRepository.GetAll();
+
+        if(medicos.size() == 0) {
+            System.out.println("Não há nenhum médico cadastrado no sistema.");
+            return;
+        }
+
+        for(int i = 0; i < medicos.size(); i++) {
+            System.out.println(i+1 + " - " + medicos.get(i).getNome());
+        }
+
+        boolean condition = true;
+        ObjectId id = new ObjectId();
+
+        while(condition) {
+            try {
+                System.out.print("Número do médico que você deseja deletar: ");
+                int index = scanner.nextInt() - 1;
+
+                if(index > medicos.size())
+                    Console.EmitError("O paciente com esse número não existe!");
+
+                id = medicos.get(index).getId();
+                condition = false;
+            }
+            catch(InputMismatchException exception) {
+                Console.EmitError("Valor inválido!");
+                scanner.nextLine();
+            }
+        }
+
+        try {
+            medicoRepository.Delete(id);
+            Console.EmitSuccess("Médico deletado com sucesso!");
+        }
+        catch (Exception exception) {
+            Console.EmitError(exception.getMessage());
+        }
     }
 }

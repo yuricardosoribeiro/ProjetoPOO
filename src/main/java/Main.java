@@ -22,9 +22,8 @@ public class Main {
             Console.EmitTitle("GESTÃO DE CLÍNICA MÉDICA");
             System.out.println("1 - Gerenciamento de Pacientes");
             System.out.println("2 - Gerenciamento de Médicos");
-            System.out.println("3 - Gerenciamento de Convênios");
-            System.out.println("4 - Área do Médico");
-            System.out.println("5 - Área do Paciente");
+            System.out.println("3 - Área do Médico");
+            System.out.println("4 - Área do Paciente");
             System.out.print("Sua escolha: ");
 
             try {
@@ -38,12 +37,9 @@ public class Main {
                         GerenciamentoMedicos();
                         break;
                     case 3:
-                        GerenciamentoConvenios();
-                        break;
-                    case 4:
                         AreaMedico();
                         break;
-                    case 5:
+                    case 4:
                         AreaPaciente();
                         break;
                 }
@@ -114,6 +110,7 @@ public class Main {
             Console.EmitTitle("GERENCIAMENTO DE MÉDICOS");
             System.out.println("1 - Cadastro de médico");
             System.out.println("2 - Mostrar médicos cadastrados");
+            System.out.println("3 - Excluir médico");
             System.out.println("0 - Voltar a tela inicial");
             System.out.print("Sua escolha: ");
 
@@ -130,39 +127,8 @@ public class Main {
                     case 2:
                         medicoService.MostrarMedicos();
                         break;
-                }
-            }
-            catch(InputMismatchException exception) {
-                Console.EmitError("Por favor, digite uma opção válida!");
-                scanner.nextLine();
-            }
-            finally {
-                choice = -1;
-            }
-        }
-    }
-
-    public static void GerenciamentoConvenios() {
-        int choice = -1;
-        boolean condition = true;
-        ConvenioService convenioServiceService = new ConvenioService();
-
-        while(condition) {
-            Console.EmitTitle("GERENCIAMENTO DE CONVÊNIOS");
-            System.out.println("1 - Cadastro de convênio");
-            System.out.println("0 - Voltar a tela inicial");
-            System.out.print("Sua escolha: ");
-
-            try {
-                choice = scanner.nextInt();
-
-                switch (choice) {
-                    case 0:
-                        condition = false;
-                        break;
-                    case 1:
-                        break;
-                    case 2:
+                    case 3:
+                        medicoService.DeletarMedico();
                         break;
                 }
             }
