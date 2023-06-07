@@ -32,6 +32,18 @@ public class AreaMedicoService {
         this.pacienteRepository = new PacienteRepository();
     }
 
+    public void InserirRegistros() {
+        ConsultaEntity consulta = this.consultaRepository.GetConsultaOcorrendoAgora(this.medico.getId());
+        Console.EmitTitle("INSERIR REGISTROS NA CONSULTA");
+
+        if(consulta != null) {
+            System.out.println(consulta.getId());
+        }
+        else {
+            Console.EmitError("Não tem nenhuma consulta ocorrendo agora!");
+        }
+    }
+
     public void MostrarAgendaDoDia() {
         List<ConsultaEntity> consultas = this.consultaRepository.GetAllConsultasMedicoDia(medico.getId());
 

@@ -212,6 +212,7 @@ public class Main {
             Console.EmitTitle("OLÁ, " + medico.getNome().toUpperCase());
             System.out.println("1 - Ver a agenda de hoje");
             System.out.println("2 - Ver a agenda da semana");
+            System.out.println("3 - Inserir registros na consulta que está ocorrendo agora");
             System.out.println("0 - Voltar a tela anterior");
             System.out.print("Sua escolha: ");
 
@@ -227,6 +228,9 @@ public class Main {
                         break;
                     case 2:
                         areaMedicoService.MostrarAgendaDaSemana();
+                        break;
+                    case 3:
+                        areaMedicoService.InserirRegistros();
                         break;
                 }
             }
@@ -279,6 +283,7 @@ public class Main {
         while(condition) {
             Console.EmitTitle("OLÁ, " + paciente.getNome().toUpperCase());
             System.out.println("1 - Agendar consulta");
+            System.out.println("2 - Ver consultas agendadas");
             System.out.println("0 - Voltar a tela anterior");
             System.out.print("Sua escolha: ");
 
@@ -292,6 +297,8 @@ public class Main {
                     case 1:
                         areaPacienteService.AgendarConsulta();
                         break;
+                    case 2:
+                        areaPacienteService.MostrarConsultasAgendadas();
                 }
             }
             catch(InputMismatchException exception) {

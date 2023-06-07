@@ -93,6 +93,19 @@ public class AreaPacienteService {
         Console.EmitSuccess("Consulta agendada com sucesso!");
     }
 
+    public void MostrarConsultasAgendadas() {
+        Console.EmitTitle("CONSULTAS AGENDADAS");
+        List<ConsultaEntity> consultas = this.consultaRepository.GetAllConsultasPaciente(this.paciente.getId());
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+        for(ConsultaEntity consulta : consultas) {
+            String dataFormatada = format.format(consulta.getData());
+            System.out.println(String.format("%d:00 até %d:00 (%s) - Médico: %s",
+                    consulta.getData().getHours(), consulta.getData().getHours() + 1,
+                    dataFormatada, consulta.getMedico().getNome()));
+        }
+    }
+
     private Date SelecionarHorario(Date data, ObjectId medicoId) {
         List<ConsultaEntity> consultas = this.consultaRepository.GetByDiaMedico(medicoId, data);
         List<Integer> horariosPreenchidos = consultas.stream().map(consulta -> consulta.getData().getHours()).toList();
@@ -105,8 +118,7 @@ public class AreaPacienteService {
         }
 
         for(int i = 0; i < lstHorarios.size(); i++) {
-            String format = String.format("%d - %d:00 até %d:00", i+1, lstHorarios.get(i), lstHorarios.get(i) + 1);
-            System.out.println(format);
+            System.out.println(String.format("%d - %d:00 até %d:00", i+1, lstHorarios.get(i), lstHorarios.get(i) + 1));
         }
 
         boolean condition = true;

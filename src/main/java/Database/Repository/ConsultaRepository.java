@@ -56,4 +56,28 @@ public class ConsultaRepository extends BaseRepository<ConsultaEntity> {
             consulta.getData().getYear() == dia.getYear()
         ).toList();
     }
+
+    public List<ConsultaEntity> GetAllConsultasPaciente(ObjectId pacienteId) {
+        List<ConsultaEntity> consultas = this.GetAll();
+
+        return consultas.stream().filter(consulta ->
+                consulta.getPaciente().getId().equals(pacienteId) && !consulta.isConsultaAconteceu()).toList();
+    }
+
+    public ConsultaEntity GetConsultaOcorrendoAgora(ObjectId medicoId) {
+        List<ConsultaEntity> consultas = this.GetAll();
+        ConsultaEntity consultaEscolhida = null;
+        Date dataAtual = new Date();
+
+        for(ConsultaEntity consulta : consultas) {
+            if(consulta.getData().getDate() == dataAtual.getDate() &&
+                consulta.getData().getMonth() == dataAtual.getMonth() &&
+                consulta.getData().getYear() == dataAtual.getYear() &&
+                consulta.getData().getHours() == dataAtual.getHours() &&
+                consulta.getMedico().getId() == medicoId)
+                consultaEscolhida = consulta;
+        }
+
+        return consultaEscolhida;
+    }
 }

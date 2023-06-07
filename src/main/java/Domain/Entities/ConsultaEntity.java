@@ -12,6 +12,15 @@ public class ConsultaEntity extends BaseEntity<ConsultaEntity> {
     private MedicoEntity Medico;
     private PacienteEntity Paciente;
     private boolean ConsultaAconteceu;
+    private RegistroConsultaEntity Registros;
+
+    public RegistroConsultaEntity getRegistros() {
+        return Registros;
+    }
+
+    public void setRegistros(RegistroConsultaEntity registros) {
+        Registros = registros;
+    }
 
     public Date getData() {
         return Data;
@@ -56,6 +65,9 @@ public class ConsultaEntity extends BaseEntity<ConsultaEntity> {
         if(this.Id != null)
             doc.append("_id", this.getId());
 
+        if(this.Registros != null)
+            doc.append("Registros", this.getRegistros().ToDocument());
+
         return doc;
     }
 
@@ -70,5 +82,9 @@ public class ConsultaEntity extends BaseEntity<ConsultaEntity> {
 
         this.Paciente = new PacienteEntity();
         Paciente.ToClass((Document) document.get("Paciente"));
+
+        Document convenioDocument = (Document)document.get("Registros");
+        if(convenioDocument != null)
+            this.Registros.ToClass(convenioDocument);
     }
 }
