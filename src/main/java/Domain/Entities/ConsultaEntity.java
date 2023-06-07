@@ -3,7 +3,6 @@ package Domain.Entities;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import java.time.LocalTime;
 import java.util.Date;
 
 public class ConsultaEntity extends BaseEntity<ConsultaEntity> {
@@ -31,7 +30,6 @@ public class ConsultaEntity extends BaseEntity<ConsultaEntity> {
     }
 
     public MedicoEntity getMedico() {
-        this.ConsultaAconteceu = false;
         return Medico;
     }
 
@@ -60,7 +58,8 @@ public class ConsultaEntity extends BaseEntity<ConsultaEntity> {
         Document doc = new Document("Data", this.getData());
         doc.append("Medico", this.getMedico().ToDocument());
         doc.append("Paciente", this.getPaciente().ToDocument());
-        doc.append("ConsultaAconteceu", this.isConsultaAconteceu());
+
+        doc.append("ConsultaAconteceu", this.ConsultaAconteceu);
 
         if(this.Id != null)
             doc.append("_id", this.getId());
@@ -84,7 +83,10 @@ public class ConsultaEntity extends BaseEntity<ConsultaEntity> {
         Paciente.ToClass((Document) document.get("Paciente"));
 
         Document convenioDocument = (Document)document.get("Registros");
-        if(convenioDocument != null)
+        if(convenioDocument != null) {
+            this.Registros = new RegistroConsultaEntity();
             this.Registros.ToClass(convenioDocument);
+        }
+
     }
 }

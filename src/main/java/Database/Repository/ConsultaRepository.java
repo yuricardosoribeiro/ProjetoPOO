@@ -1,20 +1,14 @@
 package Database.Repository;
 
 import Domain.Entities.ConsultaEntity;
-import com.mongodb.BasicDBObject;
-import com.mongodb.client.FindIterable;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ConsultaRepository extends BaseRepository<ConsultaEntity> {
 
@@ -74,10 +68,31 @@ public class ConsultaRepository extends BaseRepository<ConsultaEntity> {
                 consulta.getData().getMonth() == dataAtual.getMonth() &&
                 consulta.getData().getYear() == dataAtual.getYear() &&
                 consulta.getData().getHours() == dataAtual.getHours() &&
-                consulta.getMedico().getId() == medicoId)
+                consulta.getMedico().getId().equals(medicoId))
                 consultaEscolhida = consulta;
         }
 
         return consultaEscolhida;
+    }
+
+    public List<ConsultaEntity> GetConsultaByMedicoAndData(Object medicoId, Date dataInicio, Date dataFinal) {
+        List<ConsultaEntity> consultas = this.GetAll();
+
+        return consultas.stream().filter(consulta ->
+            consulta.getData().after(dataInicio) &&
+            consulta.getData().before(dataFinal) &&
+            consulta.getMedico().getId().equals(medicoId)
+        ).toList();
+    }
+
+    public List<ConsultaEntity> GetConsultaByPacienteAndData(Object pacienteId, Date dataInicio, Date dataFinal) {
+        List<ConsultaEntity> consultas = this.GetAll();
+
+        return consultas.stream().filter(consulta ->
+                consulta.getData().after(dataInicio) &&
+                consulta.getData().before(dataFinal) &&
+                consulta.getPaciente().getId().equals(pacienteId) &&
+                consulta.getRegistros() != null
+        ).toList();
     }
 }

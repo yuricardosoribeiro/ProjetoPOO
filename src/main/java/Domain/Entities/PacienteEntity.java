@@ -2,11 +2,9 @@ package Domain.Entities;
 
 import Domain.Exceptions.ValidationException;
 import Domain.Utils.Validators;
-import Services.ConvenioService;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import javax.swing.text.html.parser.TagElement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -95,6 +93,26 @@ public class PacienteEntity extends BaseEntity{
     public void setConvenio(ConvenioEntity convenio) { this.Convenio = convenio; }
 
     public ConvenioEntity getConvenio() { return this.Convenio; }
+
+    public int getIdade() {
+        int anoNasc = this.DataNascimento.getYear();
+        int mesNasc = this.DataNascimento.getMonth();
+        int diaNasc = this.DataNascimento.getDate();
+
+        Date dataAtual = new Date();
+
+        int anoAtual = dataAtual.getYear();
+        int mesAtual = dataAtual.getMonth();
+        int diaAtual = dataAtual.getDate();
+
+        int idade = anoAtual - anoNasc;
+
+        // Verificar se ainda não completou o aniversário
+        if (mesAtual < mesNasc || (mesAtual == mesNasc && diaAtual < diaNasc))
+            idade--;
+
+        return idade;
+    }
 
     @Override
     public Document ToDocument() {

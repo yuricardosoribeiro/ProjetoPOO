@@ -4,13 +4,11 @@ import Domain.Exceptions.ValidationException;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import java.util.List;
-
 public class MedicoEntity extends BaseEntity<MedicoEntity> {
     private String Nome;
     private String CRM;
     private String Especialidade;
-    private List<String> Convenios;
+    private ConvenioEntity Convenio;
 
     public MedicoEntity() {
 
@@ -48,12 +46,22 @@ public class MedicoEntity extends BaseEntity<MedicoEntity> {
         this.Especialidade = Especialidade;
     }
 
+    public ConvenioEntity getConvenio() {
+        return Convenio;
+    }
+
+    public void setConvenio(ConvenioEntity convenio) {
+        Convenio = convenio;
+    }
+
     @Override
     public Document ToDocument() {
         Document doc = new Document("Nome", this.getNome());
         doc.append("CRM", this.getCRM());
         doc.append("Especialidade", this.getEspecialidade());
 
+        if(Convenio != null)
+            doc.append("Convenio", this.getConvenio().ToDocument());
         if(this.Id != null)
             doc.append("_id", this.getId());
 
@@ -65,5 +73,11 @@ public class MedicoEntity extends BaseEntity<MedicoEntity> {
         this.Nome = (String) document.get("Nome");
         this.CRM = (String) document.get("CRM");
         this.Especialidade = (String) document.get("Especialidade");
+
+        Document convenioDocument = (Document)document.get("Convenio");
+        if(convenioDocument != null) {
+            this.Convenio = new ConvenioEntity();
+            this.Convenio.ToClass(convenioDocument);
+        }
     }
 }

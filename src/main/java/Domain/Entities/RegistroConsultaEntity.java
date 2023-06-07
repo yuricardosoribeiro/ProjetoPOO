@@ -64,8 +64,8 @@ public class RegistroConsultaEntity extends BaseEntity<RegistroConsultaEntity>{
     public void ToClass(Document document) {
         this.BatimentosCardiacos = (int) document.get("BatimentosCardiacos");
         this.Pressao = (String) document.get("Pressao");
-        this.Temperatura = (int) document.get("Temperatura");
-        this.Diagnostico = (String) document.get("v");
+        this.Temperatura = (double) document.get("Temperatura");
+        this.Diagnostico = (String) document.get("Diagnostico");
         this.Observacoes = (String) document.get("Observacoes");
     }
 }

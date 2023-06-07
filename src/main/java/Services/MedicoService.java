@@ -1,7 +1,6 @@
 package Services;
 
 import Database.Repository.MedicoRepository;
-import Domain.Constants.EspecialidadeConstant;
 import Domain.Entities.MedicoEntity;
 import Domain.Exceptions.ValidationException;
 import Domain.Utils.Console;
@@ -14,10 +13,12 @@ public class MedicoService {
     private MedicoRepository medicoRepository;
     private UtilsService utilsService;
     private Scanner scanner = new Scanner(System.in);
+    private ConvenioService convenioService;
 
     public MedicoService() {
         this.medicoRepository = new MedicoRepository();
         this.utilsService = new UtilsService();
+        this.convenioService = new ConvenioService();
     }
 
     public void CadastrarMedico() {
@@ -42,6 +43,14 @@ public class MedicoService {
                 if(medico.getEspecialidade() == null) {
                     medico.setEspecialidade(utilsService.SelecionarEspecialidade());
                 }
+
+                System.out.print("Deseja vincular o médico a um convênio? (S/N) = ");
+                String escolha = scanner.nextLine();
+
+                if(!escolha.equals("S") && !escolha.equals("N"))
+                    throw new ValidationException("Por favor escolha uma das opções fornecidas!");
+                else
+                    medico.setConvenio(escolha.equals("S") ? this.convenioService.VincularConvenio() : null);
 
                 isNotValid = false;
             }

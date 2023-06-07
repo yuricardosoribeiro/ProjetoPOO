@@ -3,8 +3,8 @@ package Services;
 import Database.Repository.ConsultaRepository;
 import Database.Repository.MedicoRepository;
 import Database.Repository.PacienteRepository;
-import Domain.Constants.EspecialidadeConstant;
 import Domain.Entities.ConsultaEntity;
+import Domain.Entities.ConvenioEntity;
 import Domain.Entities.MedicoEntity;
 import Domain.Entities.PacienteEntity;
 import Domain.Exceptions.ValidationException;
@@ -14,7 +14,6 @@ import org.bson.types.ObjectId;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class AreaPacienteService {
     private ConsultaRepository consultaRepository;
@@ -148,7 +147,12 @@ public class AreaPacienteService {
 
     private MedicoEntity SelecionarMedico(List<MedicoEntity> lstMedicos) {
         for(int i = 0; i < lstMedicos.size(); i++) {
-            System.out.println((i+1) + " - " + lstMedicos.get(i).getNome());
+            ConvenioEntity convenio = lstMedicos.get(i).getConvenio();
+            String hasConvenio = "";
+            if(convenio != null && this.paciente.getConvenio() != null && convenio.getId().equals(paciente.getConvenio().getId()))
+                hasConvenio = " (Vinculado ao Convênio " + paciente.getConvenio().getNome() + ")";
+
+            System.out.println((i+1) + " - " + lstMedicos.get(i).getNome() + hasConvenio);
         }
 
         boolean condition = true;

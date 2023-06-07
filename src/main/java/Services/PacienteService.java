@@ -1,14 +1,17 @@
 package Services;
 
+import Database.Repository.ConsultaRepository;
 import Database.Repository.PacienteRepository;
-import Domain.Entities.ConvenioEntity;
+import Domain.Entities.ConsultaEntity;
 import Domain.Entities.EnderecoEntity;
 import Domain.Entities.PacienteEntity;
 import Domain.Exceptions.ValidationException;
 import Domain.Utils.Console;
-import Domain.Utils.Validators;
 import org.bson.types.ObjectId;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -16,11 +19,13 @@ import java.util.Scanner;
 public class PacienteService {
     private PacienteRepository pacienteRepository;
     private ConvenioService convenioService;
+    private ConsultaRepository consultaRepository;
     private Scanner scanner = new Scanner(System.in);
 
     public PacienteService() {
         this.pacienteRepository = new PacienteRepository();
         this.convenioService = new ConvenioService();
+        this.consultaRepository = new ConsultaRepository();
     }
 
     public void CadastrarPaciente() {
@@ -191,38 +196,10 @@ public class PacienteService {
     public void AtualizarPaciente() {
         Console.EmitTitle("ATUALIZAR DADOS DE UM PACIENTE");
 
-        List<PacienteEntity> pacientes = this.pacienteRepository.GetAll();
-
-        if(pacientes.size() == 0) {
-            System.out.println("Não há nenhum paciente cadastrado no sistema.");
+        PacienteEntity paciente = this.EscolherPaciente();
+        if(paciente == null)
             return;
-        }
 
-        boolean condition = true;
-
-        for(int i = 0; i < pacientes.size(); i++) {
-            System.out.println(i + " - " + pacientes.get(i).getNome());
-        }
-
-        int index = 0;
-
-        while(condition) {
-            try {
-                System.out.print("Número do paciente que você deseja atualizar: ");
-                index = scanner.nextInt();
-
-                if(index > pacientes.size())
-                    Console.EmitError("O paciente com esse número não existe!");
-
-                scanner.nextLine();
-                condition = false;
-            }
-            catch(InputMismatchException exception) {
-                Console.EmitError("Valor inválido!");
-            }
-        }
-
-        PacienteEntity paciente = pacientes.get(index);
         PacienteEntity newPaciente = new PacienteEntity();
         newPaciente.setEndereco(new EnderecoEntity());
 
@@ -321,5 +298,89 @@ public class PacienteService {
         catch (Exception exception) {
             Console.EmitError(exception.getMessage());
         }
+    }
+
+    public void HistoricoPaciente() {
+        Console.EmitTitle("GERAR HISTÓRICO DE UM PACIENTE");
+
+        PacienteEntity paciente = this.EscolherPaciente();
+        if(paciente == null)
+            return;
+
+        boolean condition = true;
+        Date dataInicio = null;
+        Date dataFinal = null;
+        Date dataComparacao = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateHourFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+        while(condition) {
+            try {
+                if (dataInicio == null) {
+                    System.out.print("Data inicial (dd/mm/yyyy): ");
+                    String dtInicio = scanner.nextLine();
+                    dataInicio = dateFormat.parse(dtInicio);
+                    dataInicio.setHours(1);
+                }
+
+                if (dataFinal == null) {
+                    System.out.print("Data final (dd/mm/yyyy): ");
+                    String dtFinal = scanner.nextLine();
+                    dataFinal = dateFormat.parse(dtFinal);
+                    dataFinal.setHours(23);
+                }
+
+                condition = false;
+            } catch (InputMismatchException exception) {
+                Console.EmitError("Valor inválido!");
+            } catch (ParseException exception) {
+                Console.EmitError("Formato incorreto de data!");
+            }
+        }
+
+        List<ConsultaEntity> consultas = this.consultaRepository.GetConsultaByPacienteAndData(paciente.getId(), dataInicio, dataFinal);
+
+        System.out.println("\nNome completo: " + paciente.getNome());
+        System.out.println("Idade: " + paciente.getIdade());
+        System.out.println("-- Histórico de diagnósticos: ");
+
+        for(ConsultaEntity consulta : consultas) {
+            System.out.println("(" + dateHourFormat.format(consulta.getData()) + ") - " + consulta.getRegistros().getDiagnostico());
+        }
+    }
+
+    private PacienteEntity EscolherPaciente() {
+        List<PacienteEntity> pacientes = this.pacienteRepository.GetAll();
+
+        if(pacientes.size() == 0) {
+            System.out.println("Não há nenhum paciente cadastrado no sistema.");
+            return null;
+        }
+
+        boolean condition = true;
+
+        for(int i = 0; i < pacientes.size(); i++) {
+            System.out.println(i + 1 + " - " + pacientes.get(i).getNome());
+        }
+
+        int index = 0;
+
+        while(condition) {
+            try {
+                System.out.print("Número do paciente: ");
+                index = scanner.nextInt() - 1;
+
+                if(index > pacientes.size())
+                    Console.EmitError("O paciente com esse número não existe!");
+
+                scanner.nextLine();
+                condition = false;
+            }
+            catch(InputMismatchException exception) {
+                Console.EmitError("Valor inválido!");
+            }
+        }
+
+        return pacientes.get(index);
     }
 }

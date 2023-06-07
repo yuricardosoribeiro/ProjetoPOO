@@ -3,7 +3,6 @@ import Database.Repository.PacienteRepository;
 import Domain.Entities.MedicoEntity;
 import Domain.Entities.PacienteEntity;
 import Domain.Utils.Console;
-import Domain.Utils.Validators;
 import Services.*;
 
 import java.util.InputMismatchException;
@@ -13,7 +12,8 @@ import java.util.Scanner;
 public class Main {
     static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args)
+    {
 
         int choice = -1;
         boolean condition = true;
@@ -67,6 +67,7 @@ public class Main {
             System.out.println("2 - Mostrar pacientes cadastrados");
             System.out.println("3 - Deletar paciente");
             System.out.println("4 - Atualizar dados de um paciente");
+            System.out.println("5 - Histórico do paciente");
             System.out.println("0 - Voltar a tela inicial");
             System.out.print("Sua escolha: ");
 
@@ -88,6 +89,9 @@ public class Main {
                         break;
                     case 4:
                         pacienteService.AtualizarPaciente();
+                        break;
+                    case 5:
+                        pacienteService.HistoricoPaciente();
                         break;
                 }
             }
@@ -145,7 +149,7 @@ public class Main {
 
         while(condition) {
             Console.EmitTitle("GERENCIAMENTO DE CONVÊNIOS");
-            System.out.println("1 - Cadastro de médico");
+            System.out.println("1 - Cadastro de convênio");
             System.out.println("0 - Voltar a tela inicial");
             System.out.print("Sua escolha: ");
 
@@ -179,7 +183,7 @@ public class Main {
         List<MedicoEntity> medicos = medicoRepository.GetAll();
 
         for(int i = 0; i < medicos.size(); i++) {
-            System.out.println(i + " - " + medicos.get(i).getNome());
+            System.out.println((i + 1) + " - " + medicos.get(i).getNome());
         }
 
         int choice = -1;
@@ -189,7 +193,7 @@ public class Main {
         while(condition) {
             try {
                 System.out.print("Qual médico você é? ");
-                int id = scanner.nextInt();
+                int id = scanner.nextInt() - 1;
 
                 if(id > medicos.size() || id < 0)
                     Console.EmitError("Esse médico não existe!");
@@ -213,6 +217,7 @@ public class Main {
             System.out.println("1 - Ver a agenda de hoje");
             System.out.println("2 - Ver a agenda da semana");
             System.out.println("3 - Inserir registros na consulta que está ocorrendo agora");
+            System.out.println("4 - Gerar relatório de consultas");
             System.out.println("0 - Voltar a tela anterior");
             System.out.print("Sua escolha: ");
 
@@ -231,6 +236,9 @@ public class Main {
                         break;
                     case 3:
                         areaMedicoService.InserirRegistros();
+                        break;
+                    case 4:
+                        areaMedicoService.GerarRelatorio();
                         break;
                 }
             }
@@ -251,7 +259,7 @@ public class Main {
         List<PacienteEntity> pacientes = pacienteRepository.GetAll();
 
         for(int i = 0; i < pacientes.size(); i++) {
-            System.out.println(i + " - " + pacientes.get(i).getNome());
+            System.out.println((i + 1) + " - " + pacientes.get(i).getNome());
         }
 
         int choice = -1;
@@ -261,7 +269,7 @@ public class Main {
         while(condition) {
             try {
                 System.out.print("Qual paciente você é? ");
-                int id = scanner.nextInt();
+                int id = scanner.nextInt() - 1;
 
                 if(id > pacientes.size() || id < 0)
                     Console.EmitError("Esse paciente não existe!");
